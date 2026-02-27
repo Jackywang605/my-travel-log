@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import datetime
 import os
-import plotly.express as px
 
 # --- 配置与数据初始化 ---
 st.set_page_config(page_title="我的行程账本", layout="wide")
