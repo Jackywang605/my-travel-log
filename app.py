@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import datetime
 import os
+import plotly.express as px
 
 # --- 配置与数据初始化 ---
 st.set_page_config(page_title="我的行程账本", layout="wide")
@@ -71,14 +72,15 @@ if not df_display.empty:
     c1, c2 = st.columns([1, 1])
     with c1:
         st.subheader("支出构成")
-        # 修复点：将 Series 转换为 DataFrame，并重置索引
-        category_sum = df_display.groupby("类别")["金额(RMB)"].sum().reset_index()
-        # 明确指定 x 轴（类别）和 y 轴（金额）
-        st.pie_chart(category_sum, values="金额(RMB)", names="类别")
+        fig = px.pie(df_display, values='金额(RMB)', names='类别', hole=0.3)
+        st.plotly_chart(fig, use_container_width=True)
+
     with c2:
         st.subheader("城市开销分布")
-        city_sum = df_display.groupby("城市")["金额(RMB)"].sum().reset_index()
-        st.bar_chart(city_sum, x="城市", y="金额(RMB)")
+        fig_bar = px.bar(df_display.groupby("城市")["金额(RMB)"].sum().reset_index(), 
+                         x='城市', y='金额(RMB)', color='城市')
+        st.plotly_chart(fig_bar, use_container_width=True)
+        
     # 3. 详细列表查询
     st.markdown("---")
     st.subheader("📋 行程明细")
