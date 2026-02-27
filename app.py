@@ -71,13 +71,14 @@ if not df_display.empty:
     c1, c2 = st.columns([1, 1])
     with c1:
         st.subheader("支出构成")
-        category_sum = df_display.groupby("类别")["金额(RMB)"].sum()
-        st.pie_chart(category_sum)
+        # 修复点：将 Series 转换为 DataFrame，并重置索引
+        category_sum = df_display.groupby("类别")["金额(RMB)"].sum().reset_index()
+        # 明确指定 x 轴（类别）和 y 轴（金额）
+        st.pie_chart(category_sum, values="金额(RMB)", names="类别")
     with c2:
         st.subheader("城市开销分布")
-        city_sum = df_display.groupby("城市")["金额(RMB)"].sum()
-        st.bar_chart(city_sum)
-
+        city_sum = df_display.groupby("城市")["金额(RMB)"].sum().reset_index()
+        st.bar_chart(city_sum, x="城市", y="金额(RMB)")
     # 3. 详细列表查询
     st.markdown("---")
     st.subheader("📋 行程明细")
